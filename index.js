@@ -19,7 +19,7 @@ const jsonHttpCodes = new Set([200, 201]);
 async function hf(promise) {
   try {
     const res = await promise;
-    console.debug("res: received", res);
+    // console.debug("res: received", res);
 
     let json = null;
     if (jsonHttpCodes.has(res.status)) {
@@ -86,7 +86,6 @@ async function main() {
 
   const [err2, contact] = await getContactById(contacts[0].id);
   if (err2) throw new Error("failed: getContactById");
-  console.log(contact);
   console.log(`GET_CONTACT: (id:${contact.id}) :`, contact);
 
   const newContact = {
@@ -115,7 +114,7 @@ async function main() {
 
   const deleteAllPromises = [];
   // keep: 5 records and delete others
-  for (let i = 0; i < contacts.length - 5; i++) {
+  for (let i = 1; i < contacts.length - 5; i++) {
     const delePromise = deleteContact(contacts[i].id);
     deleteAllPromises.push(delePromise);
   }
