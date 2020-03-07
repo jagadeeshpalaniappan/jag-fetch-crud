@@ -1,12 +1,11 @@
 /* ###################### Util ###################### */
 
 const random = () => Math.floor(Math.random() * 10);
-const wait = (time) => {
-  return new Promise((resolve, reject)=> {
+const wait = time => {
+  return new Promise((resolve, reject) => {
     setTimeout(resolve, time);
   });
 };
-
 
 // handlePromise
 async function hp(promise) {
@@ -86,14 +85,17 @@ async function deleteContact(contactId) {
 async function main() {
   console.log("------START--------");
 
+  // GET:all
   const [err1, contacts] = await getAllContacts();
   if (err1) throw new Error("failed: getAllContact");
   console.log(`ALL_CONTACT :`, contacts);
 
+  // GET:byId
   const [err2, contact] = await getContactById(contacts[3].id);
   if (err2) throw new Error("failed: getContactById");
   console.log(`GET_CONTACT: (id:${contact.id}) :`, contact);
 
+  // CREATE:
   const newContact = {
     firstName: `jag-${random()}`,
     lastName: "developer",
@@ -103,6 +105,7 @@ async function main() {
   if (err3) throw new Error("failed: createContact");
   console.log(`NEW_CONTACT: (id:${newContactRes.id}) :`, newContactRes);
 
+  // UPDATE:
   const updatedContact = JSON.parse(JSON.stringify(contact));
   updatedContact.lastName = `dev-${random()}`;
 
@@ -112,16 +115,17 @@ async function main() {
     `UPDATED_CONTACT: (id:${updatedContact.id}) :`,
     updatedContactRes
   );
-  
 
+  // DELETE:
   const [err5, deleteContactRes] = await hf(deleteContact(contacts[0].id));
   if (err5) throw new Error("failed: deleteContact");
 
+  // DELETE: all
   const deleteAllPromises = [];
   // keep: 5 records and delete others
   for (let i = 1; i < contacts.length - 5; i++) {
     const delePromise = deleteContact(contacts[i].id);
-    await wait(300);
+    await wait(300); // wait for 300ms
 
     deleteAllPromises.push(delePromise);
   }
@@ -133,8 +137,5 @@ async function main() {
   console.log("------END--------");
 }
 
-try {
-  main();
-} catch (err) {
-  console.err('ERR', err);
-}
+
+main();
