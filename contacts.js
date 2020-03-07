@@ -39,7 +39,7 @@ async function hf(promise) {
 }
 
 /* ###################### API ###################### */
-const CONTACT_ENDPOINT = "https://jag-rest-api.firebaseapp.com/api/v1/any/employees";
+const CONTACT_ENDPOINT = "https://jag-rest-api.firebaseapp.com/api/v1/contacts";
 
 async function getAllContacts() {
   return hf(fetch(`${CONTACT_ENDPOINT}`));
@@ -91,7 +91,7 @@ async function main() {
   console.log(`ALL_CONTACT :`, contacts);
 
   // GET:byId
-  const [err2, contact] = await getContactById(contacts[1].id);
+  const [err2, contact] = await getContactById(contacts[3].id);
   if (err2) throw new Error("failed: getContactById");
   console.log(`GET_CONTACT: (id:${contact.id}) :`, contact);
 
