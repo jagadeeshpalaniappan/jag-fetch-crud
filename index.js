@@ -1,6 +1,12 @@
 /* ###################### Util ###################### */
 
 const random = () => Math.floor(Math.random() * 10);
+const wait = (time) => {
+  return new Promise((resolve, reject)=> {
+    setTimeout(resolve, time);
+  });
+};
+
 
 // handlePromise
 async function hp(promise) {
@@ -71,7 +77,7 @@ async function updateContact(contact) {
 }
 
 async function deleteContact(contactId) {
-  console.log('deleteContact:',contactId);
+  console.log("deleteContact:", contactId);
   return hp(fetch(`${CONTACT_ENDPOINT}/${contactId}`, { method: "DELETE" }));
 }
 
@@ -84,7 +90,7 @@ async function main() {
   if (err1) throw new Error("failed: getAllContact");
   console.log(`ALL_CONTACT :`, contacts);
 
-  const [err2, contact] = await getContactById(contacts[0].id);
+  const [err2, contact] = await getContactById(contacts[3].id);
   if (err2) throw new Error("failed: getContactById");
   console.log(`GET_CONTACT: (id:${contact.id}) :`, contact);
 
@@ -106,16 +112,17 @@ async function main() {
     `UPDATED_CONTACT: (id:${updatedContact.id}) :`,
     updatedContactRes
   );
+  
 
   const [err5, deleteContactRes] = await hf(deleteContact(contacts[0].id));
   if (err5) throw new Error("failed: deleteContact");
-
-
 
   const deleteAllPromises = [];
   // keep: 5 records and delete others
   for (let i = 1; i < contacts.length - 5; i++) {
     const delePromise = deleteContact(contacts[i].id);
+    await wait(300);
+
     deleteAllPromises.push(delePromise);
   }
 
@@ -126,5 +133,8 @@ async function main() {
   console.log("------END--------");
 }
 
-
-main();
+try {
+  main();
+} catch (err) {
+  console.err('ERR', err);
+}
