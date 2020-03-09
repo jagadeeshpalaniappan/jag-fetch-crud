@@ -38,8 +38,20 @@ async function hf(promise) {
   }
 }
 
+// cancelablePromise
+function cp(targetPromise) {
+  const obj = {};
+  obj.promise = new Promise((resolve, reject) => {
+    console.log("Promise:start");
+    obj.cancel = reject;
+    targetPromise.then(resolve).catch(reject)
+  });
+  return obj;
+}
+
 /* ###################### API ###################### */
-const CONTACT_ENDPOINT = "https://jag-rest-api.firebaseapp.com/api/v1/any/employees";
+const CONTACT_ENDPOINT =
+  "https://jag-rest-api.firebaseapp.com/api/v1/any/employees";
 
 async function getAllContacts() {
   return hf(fetch(`${CONTACT_ENDPOINT}`));
@@ -137,5 +149,20 @@ async function main() {
   console.log("------END--------");
 }
 
+// main();
 
-main();
+/*
+async function mainPromiseCancel() {
+  const obj = cp(fetch(`${CONTACT_ENDPOINT}`));
+
+  obj.cancel({ isCanceled: true });
+
+  const [err, data] = await hp(obj.promise);
+  if (err) {
+    console.log("Promise:err", err);
+  } else {
+    console.log("Promise:success", data);
+  }
+}
+mainPromiseCancel();
+*/
